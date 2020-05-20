@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
+		
+<script type = "text/javascript"> 
+$(document).ready( function(){
+ 
+   $("button").click(function(){ 
+   
+     var zip = $("#zip").val();
+	 
+     if(zip != ''){
+         
+		 $.ajax({
+             type: 		"GET",
+             url: 		"weather.php",
+             data: 		"zip="+zip,
+             
+		     beforeSend: function(){ 		
+			                  $("#B").html("waiting....");                },
+         
+			 error: 		function(xhr, status, error) {  
+							  alert( "Error Mesaage:  \r\nNumeric code is: "  + xhr.status + " \r\nError is " + error);   },
+			 
+			 success: 	function(result){
+				  
+				r = JSON.parse(result);
+				
+				res =  "<br><br>" +
+				       "<br>City: "			  + r.name+  " "				  +		/* name property 			*/
+					   "<br>Temperature: " 	  + r.main.temp + "&deg;C "		  +		/* main's temp 				*/
+				       "<br>Weather: " 		  + r.weather[0].main + " "		  +		/* weather's main property 	*/
+					   "<br>Sunrise/epoch: "  + r.sys.sunrise + " "			  +
+					   "<br>Description: " 	  + r.weather[0].description + " " + //Added Description paramneter
+					   "<br>Humidity: " 	  + r.main.humidity + "% " + //Added Humidity parameter
+					   "<br>Wind's Speed: "   + r.wind.speed + "m/s " + //Added Wind's Speed parameter
+					   "<br>Weather Icon: " 	  + r.weather[0].icon + " " + //Added Weather Icon paramneter
+					   "<br>Weather Condition ID: " 	  + r.weather[0].id + " " + //Added Weather Condition ID paramneter
+					   "<br>Country Code: "  + r.sys.country + " " + //Added Country Code parameter
+					   "<br>Latitude: "  + r.coord.lat + "&deg " + //Added Latitude parameter
+				       "<br>Longitude: "  + r.coord.lon + "&deg " +  //Added Longitude parameter
+					   "<br><br>";
+				
+				$("#B").html(res); 
+				
+			}	//success  - the bracket } closes the definition of function(result){ ... }
+		});	    //ajax     - the }) closes the  $.ajax({ ...  })  
+     };			//the bracket }  closes the if(zip != '')  {  ....  }
+  });			//anonymous fn handler for button: click(function(){ })
+});				//the  })  closes ready event handler:  ready( function(){ ... })
+     
+</script>
+<style> #C { margin: auto; border-radius: 15px; width: 50%; border: 2px solid blue; padding: 15px; } </style>
+</head>
+
+<body>
+<br><br>
+<div id="C">
+<h1> Weather Report</h1>   
+<input 	id = "zip" type = "number" name = "zip" placeholder="Zipcode" autocomplete="off" min="0" required>
+<button id = "btn" type = "BUTTON"><b>REQUEST WEATHER</b></button><br><br>
+<div id= "B"></div>
+
+</body>
+</html>
